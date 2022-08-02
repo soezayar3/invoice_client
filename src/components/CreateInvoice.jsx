@@ -1,120 +1,44 @@
 import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
-import { Button, Grid, TextField, Typography } from "@material-ui/core";
+import { Button, Grid, TextField, Typography, CircularProgress } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 import MaterialTable from "material-table";
 
-const options = [
-    {
-        name: "Rose",
-        picture:
-            "https://images.unsplash.com/photo-1548460464-2a68877c7a5f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&q=80",
-        price: 1000,
-        stock: 30,
-    },
-    {
-        name: "Lily",
-        picture:
-            "https://images.unsplash.com/photo-1580595999172-787970a962d8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8bGlseXxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60",
-        price: 1500,
-        stock: 30,
-    },
-    {
-        name: "Tulip",
-        picture:
-            "https://images.unsplash.com/photo-1518701005037-d53b1f67bb1c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8dHVsaXB8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
-        price: 2000,
-        stock: 30,
-    },
-    {
-        name: "Orchid",
-        picture:
-            "https://images.unsplash.com/photo-1611820135074-e2d0e3e92322?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTV8fG9yY2hpZHxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60",
-        price: 2500,
-        stock: 30,
-    },
-    {
-        name: "Carnation",
-        picture:
-            "https://images.unsplash.com/photo-1592220957678-3446df33041b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTJ8fGNhcm5hdGlvbnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60",
-        price: 3000,
-        stock: 30,
-    },
-    {
-        name: "Freesia",
-        picture:
-            "https://images.unsplash.com/photo-1559765197-45741695a7fe?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8ZnJlZXNpYXxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60",
-        price: 3500,
-        stock: 30,
-    },
-    {
-        name: "Hyacinth",
-        picture:
-            "https://images.unsplash.com/photo-1586522528166-dc0e55a9c046?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8aHlhY2ludGh8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
-        price: 4000,
-        stock: 30,
-    },
-    {
-        name: "Anemone",
-        picture:
-            "https://images.unsplash.com/photo-1589574493947-305a8247d689?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTB8fGFuZW1vbmV8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
-        price: 4500,
-        stock: 30,
-    },
-    {
-        name: "Daffodil",
-        picture:
-            "https://images.unsplash.com/photo-1485431142439-206ba3a9383e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8ZGFmZm9kaWx8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
-        price: 5000,
-        stock: 30,
-    },
-    {
-        name: "Poppy",
-        picture:
-            "https://images.unsplash.com/photo-1606952460453-3b7edc2f67a7?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8OHx8cG9wcHl8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
-        price: 5500,
-        stock: 30,
-    },
-    {
-        name: "Sunflower",
-        picture:
-            "https://images.unsplash.com/photo-1598364170688-8019081b09cf?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTl8fHN1bmZsb3dlcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60",
-        price: 6000,
-        stock: 30,
-    },
-    {
-        name: "Marigold",
-        picture:
-            "https://images.unsplash.com/photo-1606432144664-594a97fea6e2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8bWFyaWdvbGR8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
-        price: 6500,
-        stock: 30,
-    },
-];
+import { getProducts } from "../store/actions/products.js";
 
 const CreateInvoice = () => {
     const tableRef = React.createRef();
 
+    const { products, isLoading } = useSelector((state) => state.products);
+
     const [value, setValue] = useState(null);
     const [inputValue, setInputValue] = useState("");
 
-    const [products, setProducts] = useState([]);
+    const [invoiceProducts, setInvoiceProducts] = useState([]);
     const [totalPrice, setTotalPrice] = useState(0);
 
     const [customerName, setCustomerName] = useState("");
     const [salePersonName, setSalePersonName] = useState("");
     const [note, setNote] = useState("");
 
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(getProducts(inputValue));
+    }, []);
+
     useEffect(() => {
         let _total = 0;
-        products.map((product) => (_total += product?.total));
+        invoiceProducts.map((product) => (_total += product?.total));
         setTotalPrice(_total);
-    }, [products]);
+    }, [invoiceProducts]);
 
     const onAdd = async () => {
-        const selected = products.find((product) => product.name === value.name);
+        const selected = invoiceProducts.find((product) => product.name === value.name);
         if (selected) {
             if (value.stock > selected.quantity) {
-                let updatedProducts = products.map((product) => {
+                let updatedProducts = invoiceProducts.map((product) => {
                     if (product.name === selected.name) {
                         let _qty = ++product.quantity;
                         product.quantity = _qty;
@@ -123,15 +47,15 @@ const CreateInvoice = () => {
                     }
                     return product;
                 });
-                setProducts(updatedProducts);
+                setInvoiceProducts(updatedProducts);
             } else {
                 alert("Out of Stock");
             }
         } else {
-            setProducts([
-                ...products,
+            setInvoiceProducts([
+                ...invoiceProducts,
                 {
-                    no: products.length + 1,
+                    no: invoiceProducts.length + 1,
                     name: value?.name,
                     picture: value?.picture,
                     price: value?.price,
@@ -144,26 +68,28 @@ const CreateInvoice = () => {
     };
 
     const onRemoveProduct = (rowData) => {
-        let _products = products.filter((p) => p.no !== rowData.no);
-        setProducts([..._products]);
+        let _products = invoiceProducts.filter((p) => p.no !== rowData.no);
+        setInvoiceProducts([..._products]);
     };
 
     const onReset = () => {
-        setProducts([]);
+        setInvoiceProducts([]);
         setTotalPrice(0);
         setCustomerName("");
         setSalePersonName("");
         setNote("");
     };
 
-    return (
+    return isLoading ? (
+        <CircularProgress />
+    ) : (
         <div style={{ margin: "30px auto" }}>
             <Grid container spacing={2} fullWidth style={{ margin: "0 auto" }} justifyContent="center">
                 <Grid item xs={12} lg={10}>
                     <Autocomplete
                         fullWidth
                         id="combo-box-demo"
-                        options={options}
+                        options={products}
                         getOptionLabel={(option) => option.name || ""}
                         value={value}
                         onChange={(event, newValue) => {
@@ -239,7 +165,7 @@ const CreateInvoice = () => {
                             actionsColumnIndex: -1,
                             search: false,
                         }}
-                        data={products}
+                        data={invoiceProducts}
                         actions={[
                             {
                                 icon: "remove",

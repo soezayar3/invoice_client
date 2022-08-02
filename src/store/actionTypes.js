@@ -1,0 +1,8 @@
+export const GET_PRODUCTS = "GET_PRODUCTS";
+
+export const GET_INVOICES = "GET_INVOICES";
+export const CREATE_INVOICE = "CREATE_INVOICES";
+export const GET_INVOICES_GRAPH = "GET_INVOICES_GRAPH";
+
+export const START_LOADING = "START_LOADING";
+export const END_LOADING = "END_LOADING";
