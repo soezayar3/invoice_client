@@ -7,6 +7,8 @@ import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 
+import CreateInvoice from "./components/CreateInvoice";
+
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
 
@@ -66,7 +68,7 @@ export default function App() {
                 </Tabs>
             </AppBar>
             <TabPanel value={value} index={0}>
-                Tab One
+                <CreateInvoice />
             </TabPanel>
             <TabPanel value={value} index={1}>
                 Tab Two
