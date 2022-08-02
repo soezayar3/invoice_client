@@ -6,6 +6,7 @@ import { Autocomplete } from "@material-ui/lab";
 import MaterialTable from "material-table";
 
 import { getProducts } from "../store/actions/products.js";
+import { createInvoice } from "../store/actions/invoices.js";
 
 const CreateInvoice = () => {
     const tableRef = React.createRef();
@@ -35,11 +36,11 @@ const CreateInvoice = () => {
     }, [invoiceProducts]);
 
     const onAdd = async () => {
-        const selected = invoiceProducts.find((product) => product.name === value.name);
+        const selected = invoiceProducts.find((product) => product._id === value._id);
         if (selected) {
             if (value.stock > selected.quantity) {
                 let updatedProducts = invoiceProducts.map((product) => {
-                    if (product.name === selected.name) {
+                    if (product._id === selected._id) {
                         let _qty = ++product.quantity;
                         product.quantity = _qty;
                         product.total = product.price * _qty;
@@ -55,6 +56,7 @@ const CreateInvoice = () => {
             setInvoiceProducts([
                 ...invoiceProducts,
                 {
+                    _id: value?._id,
                     no: invoiceProducts.length + 1,
                     name: value?.name,
                     picture: value?.picture,
@@ -78,6 +80,25 @@ const CreateInvoice = () => {
         setCustomerName("");
         setSalePersonName("");
         setNote("");
+    };
+
+    const onSubmit = async () => {
+        let _invoiceProducts = invoiceProducts.map((product) => {
+            delete product.no;
+            delete product.tableData;
+            delete product.stock;
+            return product;
+        });
+
+        let _new_invoice = {
+            customerName,
+            salePersonName,
+            note,
+            invoiceProducts: _invoiceProducts,
+            totalPrice,
+        };
+        dispatch(createInvoice(_new_invoice));
+        onReset();
     };
 
     return isLoading ? (
@@ -229,7 +250,7 @@ const CreateInvoice = () => {
                     style={{ padding: "14px 30px", margin: "0 30px" }}
                     variant="contained"
                     color="secondary"
-                    onClick={onAdd}
+                    onClick={onSubmit}
                     size="medium"
                 >
                     Submit
