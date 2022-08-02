@@ -100,6 +100,10 @@ const CreateInvoice = () => {
     const [products, setProducts] = useState([]);
     const [totalPrice, setTotalPrice] = useState(0);
 
+    const [customerName, setCustomerName] = useState("");
+    const [salePersonName, setSalePersonName] = useState("");
+    const [note, setNote] = useState("");
+
     useEffect(() => {
         let _total = 0;
         products.map((product) => (_total += product?.total));
@@ -144,9 +148,17 @@ const CreateInvoice = () => {
         setProducts([..._products]);
     };
 
+    const onReset = () => {
+        setProducts([]);
+        setTotalPrice(0);
+        setCustomerName("");
+        setSalePersonName("");
+        setNote("");
+    };
+
     return (
         <div style={{ margin: "30px auto" }}>
-            <Grid container spacing={2} fullWidth style={{ margin: "0 auto" }}>
+            <Grid container spacing={2} fullWidth style={{ margin: "0 auto" }} justifyContent="center">
                 <Grid item xs={12} lg={10}>
                     <Autocomplete
                         fullWidth
@@ -197,48 +209,106 @@ const CreateInvoice = () => {
                     </Button>
                 </Grid>
             </Grid>
-            <div style={{ marginTop: "30px" }}>
-                <MaterialTable
-                    tableRef={tableRef}
-                    columns={[
-                        { title: "No", field: "no" },
-                        {
-                            title: "Picture",
-                            field: "picture",
-                            render: (rowData) =>
-                                rowData.picture && (
-                                    <img
-                                        src={rowData.picture}
-                                        style={{ width: 50, height: 50, objectFit: "contain" }}
-                                        alt={rowData.name}
-                                    />
-                                ),
-                        },
-                        { title: "Name", field: "name" },
-                        { title: "Price", field: "price" },
-                        { title: "Quantity", field: "quantity" },
-                        { title: "Total", field: "total" },
-                    ]}
-                    title="Products"
-                    options={{
-                        pageSize: 5,
-                        pageSizeOptions: [5, 10, 20],
-                        actionsColumnIndex: -1,
-                        search: false,
-                    }}
-                    data={products}
-                    actions={[
-                        {
-                            icon: "remove",
-                            tooltip: "Remove Product",
-                            onClick: (e, rowData) => onRemoveProduct(rowData),
-                        },
-                    ]}
-                />
-                <Typography style={{ margin: "10px auto", fontSize: "21px", color: "#F44336" }}>
-                    Total Price: {totalPrice}
-                </Typography>
+            {totalPrice !== 0 && (
+                <div style={{ marginTop: "30px" }}>
+                    <MaterialTable
+                        tableRef={tableRef}
+                        columns={[
+                            { title: "No", field: "no" },
+                            {
+                                title: "Picture",
+                                field: "picture",
+                                render: (rowData) =>
+                                    rowData.picture && (
+                                        <img
+                                            src={rowData.picture}
+                                            style={{ width: 50, height: 50, objectFit: "contain" }}
+                                            alt={rowData.name}
+                                        />
+                                    ),
+                            },
+                            { title: "Name", field: "name" },
+                            { title: "Price", field: "price" },
+                            { title: "Quantity", field: "quantity" },
+                            { title: "Total", field: "total" },
+                        ]}
+                        title="Products"
+                        options={{
+                            pageSize: 5,
+                            pageSizeOptions: [5, 10, 20],
+                            actionsColumnIndex: -1,
+                            search: false,
+                        }}
+                        data={products}
+                        actions={[
+                            {
+                                icon: "remove",
+                                tooltip: "Remove Product",
+                                onClick: (e, rowData) => onRemoveProduct(rowData),
+                            },
+                        ]}
+                    />
+                    <Typography style={{ margin: "10px auto", fontSize: "21px", color: "#F44336" }}>
+                        Total Price: {totalPrice}
+                    </Typography>
+                </div>
+            )}
+            <div style={{ margin: "30px 5px 0 0" }}>
+                <Grid container spacing={2} fullWidth>
+                    <Grid item xs={12} md={6}>
+                        <TextField
+                            fullWidth
+                            color="secondary"
+                            label="Customer Name"
+                            variant="outlined"
+                            value={customerName}
+                            onChange={(e) => setCustomerName(e.target.value)}
+                        />
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                        <TextField
+                            fullWidth
+                            color="secondary"
+                            label="Sale Person Name"
+                            variant="outlined"
+                            value={salePersonName}
+                            onChange={(e) => setSalePersonName(e.target.value)}
+                        />
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                        <TextField
+                            fullWidth
+                            color="secondary"
+                            label="Note"
+                            variant="outlined"
+                            value={note}
+                            onChange={(e) => setNote(e.target.value)}
+                            multiline
+                            rows={4}
+                        />
+                    </Grid>
+                </Grid>
             </div>
+            <Grid container spacing={2} fullWidth style={{ margin: "20px auto" }} justifyContent="center">
+                <Button
+                    style={{ padding: "14px 30px" }}
+                    variant="outlined"
+                    color="secondary"
+                    onClick={onReset}
+                    size="medium"
+                >
+                    Reset
+                </Button>
+                <Button
+                    style={{ padding: "14px 30px", margin: "0 30px" }}
+                    variant="contained"
+                    color="secondary"
+                    onClick={onAdd}
+                    size="medium"
+                >
+                    Submit
+                </Button>
+            </Grid>
         </div>
     );
 };
