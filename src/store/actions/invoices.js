@@ -1,14 +1,12 @@
 import { GET_INVOICES, CREATE_INVOICE, GET_INVOICES_GRAPH, START_LOADING, END_LOADING } from "../actionTypes";
 import * as api from "../../api.js";
 
-export const getInvoices = (page) => async (dispatch) => {
+export const getInvoices = () => async (dispatch) => {
     try {
         dispatch({ type: START_LOADING });
-        const {
-            data: { data, currentPage, numberOfPages },
-        } = await api.getInvoices(page);
+        const { data } = await api.getInvoices();
 
-        dispatch({ type: GET_INVOICES, payload: { data, currentPage, numberOfPages } });
+        dispatch({ type: GET_INVOICES, payload: { data } });
         dispatch({ type: END_LOADING });
     } catch (error) {
         console.log(error);

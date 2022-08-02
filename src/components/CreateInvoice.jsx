@@ -27,7 +27,7 @@ const CreateInvoice = () => {
 
     useEffect(() => {
         dispatch(getProducts(inputValue));
-    }, []);
+    }, [dispatch]);
 
     useEffect(() => {
         let _total = 0;
@@ -84,7 +84,6 @@ const CreateInvoice = () => {
 
     const onSubmit = async () => {
         let _invoiceProducts = invoiceProducts.map((product) => {
-            delete product.no;
             delete product.tableData;
             delete product.stock;
             return product;

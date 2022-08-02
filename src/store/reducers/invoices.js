@@ -14,7 +14,7 @@ export default (state = { isLoading: true, invoices: [], invoices_graphs: [] }, 
                 numberOfPages: action.payload.numberOfPages,
             };
         case CREATE_INVOICE:
-            return { ...state, invoices: [...state.invoices, action.payload] };
+            return { ...state };
         case GET_INVOICES_GRAPH:
             return {
                 ...state,
