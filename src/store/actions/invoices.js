@@ -1,5 +1,5 @@
 import { GET_INVOICES, CREATE_INVOICE, GET_INVOICES_GRAPH, START_LOADING, END_LOADING } from "../actionTypes";
-import * as api from "../../api.js";
+import * as api from "../../services/api.js";
 
 export const getInvoices = () => async (dispatch) => {
     try {
@@ -19,6 +19,7 @@ export const createInvoice = (invoice) => async (dispatch) => {
         const { data } = await api.createInvoice(invoice);
 
         dispatch({ type: CREATE_INVOICE, payload: data });
+        dispatch(getInvoicesGraph());
         dispatch({ type: END_LOADING });
     } catch (error) {
         console.log(error);

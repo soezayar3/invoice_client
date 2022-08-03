@@ -1,5 +1,5 @@
 import { GET_PRODUCTS, START_LOADING, END_LOADING } from "../actionTypes.js";
-import * as api from "../../api.js";
+import * as api from "../../services/api.js";
 
 export const getProducts = (name) => async (dispatch) => {
     try {

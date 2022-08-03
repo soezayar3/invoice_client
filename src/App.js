@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
@@ -6,10 +6,14 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
+import { useDispatch, useSelector } from "react-redux";
 
 import CreateInvoice from "./components/CreateInvoice";
 import ViewInvoices from "./components/ViewInvoices";
 import InvoicesGraph from "./components/InvoicesGraph";
+
+import { getInvoicesGraph } from "./store/actions/invoices";
+import { CircularProgress } from "@material-ui/core";
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -56,6 +60,14 @@ export default function App() {
     const classes = useStyles();
     const [value, setValue] = useState(0);
 
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(getInvoicesGraph());
+    }, [dispatch]);
+
+    const { invoices_graphs, isLoading } = useSelector((state) => state.invoices);
+
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
@@ -89,9 +101,15 @@ export default function App() {
                 <ViewInvoices />
             </TabPanel>
             <TabPanel value={value} index={2}>
-                <InvoicesGraph test_data={test_data} label="Daily" />
-                <InvoicesGraph test_data={test_data} label="Monthly" />
-                <InvoicesGraph test_data={test_data} label="Yearly" />
+                {isLoading ? (
+                    <CircularProgress />
+                ) : (
+                    <>
+                        <InvoicesGraph test_data={invoices_graphs.dailyGraph} label="Daily" />
+                        <InvoicesGraph test_data={test_data} label="Monthly" />
+                        <InvoicesGraph test_data={test_data} label="Yearly" />
+                    </>
+                )}
             </TabPanel>
         </div>
     );
