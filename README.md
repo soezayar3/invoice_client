@@ -6,6 +6,14 @@
 
 ### [Server App](https://google.com)
 
+### Project Setup
+
+1. Clone Repository
+2. `npm install`
+3. Add environment variable (see .env.example)
+4. `npm start` to start the app
+5. Go to `localhost:3000`, you should see a running app
+
 ## Technology Stack
 
 ### Front end
