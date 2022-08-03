@@ -10,7 +10,8 @@ import { useDispatch, useSelector } from "react-redux";
 
 import CreateInvoice from "./components/CreateInvoice";
 import ViewInvoices from "./components/ViewInvoices";
-import InvoicesGraph from "./components/InvoicesGraph";
+import InvoicesLineGraph from "./components/InvoicesLineGraph";
+import InvoicesBarGraph from "./components/InvoicesBarGraph";
 
 import { getInvoicesGraph } from "./store/actions/invoices";
 import { CircularProgress } from "@material-ui/core";
@@ -72,19 +73,6 @@ export default function App() {
         setValue(newValue);
     };
 
-    const test_data = {
-        "Test One": 10,
-        "Test Two": 20,
-        "Test Three": 10,
-        "Test Four": 55,
-        "Test Five": 60,
-        "Test Six": 25,
-        "Test Seven": 40,
-        "Test Eight": 45,
-        "Test Nine": 30,
-        "Test Ten": 55,
-    };
-
     return (
         <div className={classes.root}>
             <AppBar position="static" style={{ backgroundColor: "#57BFC4" }}>
@@ -105,9 +93,9 @@ export default function App() {
                     <CircularProgress />
                 ) : (
                     <>
-                        <InvoicesGraph test_data={invoices_graphs.dailyGraph} label="Daily" />
-                        <InvoicesGraph test_data={test_data} label="Monthly" />
-                        <InvoicesGraph test_data={test_data} label="Yearly" />
+                        <InvoicesLineGraph data={invoices_graphs.dailyGraph} label="Daily" />
+                        <InvoicesBarGraph data={invoices_graphs.monthlyGraph} label="Monthly" />
+                        <InvoicesBarGraph data={invoices_graphs.yearlyGraph} label="Yearly" />
                     </>
                 )}
             </TabPanel>

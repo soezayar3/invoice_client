@@ -3,13 +3,13 @@ import React from "react";
 import { Grid } from "@material-ui/core";
 import { Line } from "react-chartjs-2";
 
-const InvoicesGraph = ({ test_data, label }) => {
+const InvoicesLineGraph = ({ data, label }) => {
     const lineData = {
-        labels: Object.keys(test_data),
+        labels: Object.keys(data),
         datasets: [
             {
-                label: "Total Invoices",
-                data: Object.values(test_data),
+                label: "Total Invoicing Amount",
+                data: Object.values(data),
                 backgroundColor: ["rgba(87, 191, 196, 0.2)"],
                 borderColor: ["#F44336"],
             },
@@ -51,4 +51,4 @@ const InvoicesGraph = ({ test_data, label }) => {
     );
 };
 
-export default InvoicesGraph;
+export default InvoicesLineGraph;
