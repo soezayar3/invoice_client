@@ -7,6 +7,7 @@ import MaterialTable from "material-table";
 
 import { getProducts } from "../store/actions/products.js";
 import { createInvoice } from "../store/actions/invoices.js";
+import util from "../services/utils.js";
 
 const CreateInvoice = () => {
     const tableRef = React.createRef();
@@ -70,7 +71,7 @@ const CreateInvoice = () => {
     };
 
     const onRemoveProduct = (rowData) => {
-        let _products = invoiceProducts.filter((p) => p.no !== rowData.no);
+        let _products = invoiceProducts.filter((p) => p._id !== rowData._id);
         setInvoiceProducts([..._products]);
     };
 
@@ -83,6 +84,10 @@ const CreateInvoice = () => {
     };
 
     const onSubmit = async () => {
+        if (invoiceProducts.length === 0) {
+            alert("Please Add At Lead One Product To Invoice");
+            return;
+        }
         let _invoiceProducts = invoiceProducts.map((product) => {
             delete product.tableData;
             delete product.stock;
@@ -174,9 +179,17 @@ const CreateInvoice = () => {
                                     ),
                             },
                             { title: "Name", field: "name" },
-                            { title: "Price", field: "price" },
+                            {
+                                title: "Price",
+                                field: "price",
+                                render: (rowData) => rowData.price && util.format_money(rowData.price),
+                            },
                             { title: "Quantity", field: "quantity" },
-                            { title: "Total", field: "total" },
+                            {
+                                title: "Total",
+                                field: "total",
+                                render: (rowData) => rowData.total && util.format_money(rowData.total),
+                            },
                         ]}
                         title="Products"
                         options={{
@@ -195,7 +208,7 @@ const CreateInvoice = () => {
                         ]}
                     />
                     <Typography style={{ margin: "10px auto", fontSize: "21px", color: "#F44336" }}>
-                        Total Price: {totalPrice}
+                        Total Price: {util.format_money(totalPrice)}
                     </Typography>
                 </div>
             )}

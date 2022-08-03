@@ -14,6 +14,7 @@ import {
 import MaterialTable from "material-table";
 
 import { getInvoices } from "../store/actions/invoices.js";
+import util from "../services/utils.js";
 
 const ViewInvoices = () => {
     const tableRef = React.createRef();
@@ -49,8 +50,18 @@ const ViewInvoices = () => {
                 columns={[
                     { title: "Customer Name", field: "customerName", filtering: true },
                     { title: "Sale Person Name", field: "salePersonName", filtering: true },
-                    { title: "Total Amount", field: "totalPrice", filtering: true },
-                    // { title: "Created At", field: "date", filtering: true },
+                    {
+                        title: "Total Amount",
+                        field: "totalPrice",
+                        filtering: true,
+                        render: (rowData) => rowData.totalPrice && util.format_money(rowData.totalPrice),
+                    },
+                    {
+                        title: "Created At",
+                        field: "date",
+                        filtering: true,
+                        render: (rowData) => rowData.date && rowData.date,
+                    },
                 ]}
                 title="Products"
                 options={{
@@ -72,12 +83,10 @@ const ViewInvoices = () => {
             <Dialog open={openDetail} onClose={onCloseDetail} maxWidth="md" fullWidth>
                 <DialogTitle>Invoice Products Detail</DialogTitle>
                 <DialogContent>
-                    {/* <InvoiceProducts invoiceProducts={invoiceProducts} totalPrice={detailTotalPrice} /> */}
                     <div style={{ marginTop: "30px" }}>
                         <MaterialTable
                             tableRef={tableRef2}
                             columns={[
-                                { title: "No", field: "no" },
                                 {
                                     title: "Picture",
                                     field: "picture",
@@ -91,9 +100,17 @@ const ViewInvoices = () => {
                                         ),
                                 },
                                 { title: "Name", field: "name" },
-                                { title: "Price", field: "price" },
+                                {
+                                    title: "Price",
+                                    field: "price",
+                                    render: (rowData) => rowData.price && util.format_money(rowData.price),
+                                },
                                 { title: "Quantity", field: "quantity" },
-                                { title: "Total", field: "total" },
+                                {
+                                    title: "Total",
+                                    field: "total",
+                                    render: (rowData) => rowData.total && util.format_money(rowData.total),
+                                },
                             ]}
                             title="Products"
                             options={{
@@ -105,7 +122,7 @@ const ViewInvoices = () => {
                             data={invoiceProducts}
                         />
                         <Typography style={{ margin: "10px auto", fontSize: "21px", color: "#F44336" }}>
-                            Total Price: {detailTotalPrice}
+                            Total Price: {util.format_money(detailTotalPrice)}
                         </Typography>
                     </div>
                 </DialogContent>
