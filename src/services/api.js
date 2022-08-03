@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const API = axios.create({ baseURL: "http://localhost:3030" });
+const baseURL = process.env.REACT_APP_API_URL;
+const API = axios.create({ baseURL: baseURL });
 
 export const getProducts = (name) => API.get(`/products?search=${name}`);
 
