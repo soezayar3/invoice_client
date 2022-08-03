@@ -2,9 +2,9 @@
 
 # Demo Apps
 
-### [Client App](https://google.com)
+### [Client App](https://invoice-client-chi.vercel.app/)
 
-### [Server App](https://google.com)
+### [Server App](https://invoice-server-demo.herokuapp.com/)
 
 ### Project Setup
 
